@@ -15,5 +15,5 @@ public class TaxiDriver {
     private int age;
     private int drivingExperience;
     private long salary;
-    private List<String> cars;
+    private String cars;
 }
