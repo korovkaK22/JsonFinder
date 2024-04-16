@@ -2,8 +2,6 @@ package com.jsonproject.finder.entity;
 
 import lombok.*;
 
-import java.util.List;
-
 @AllArgsConstructor
 @Getter
 @Setter
@@ -11,7 +9,7 @@ import java.util.List;
 @ToString
 public class TaxiDriver {
     private String name;
-    private String company;
+    private String companyName;
     private int age;
     private int drivingExperience;
     private long salary;

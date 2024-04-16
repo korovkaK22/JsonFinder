@@ -7,7 +7,7 @@ import utils.TaxiDriverJsonFileCreator;
 
 import java.util.Random;
 
-public class MainTest {
+public class JsonFinderTest {
 
     @Test
     void mainTest(){

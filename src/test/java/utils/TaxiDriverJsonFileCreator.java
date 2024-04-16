@@ -69,7 +69,7 @@ public class TaxiDriverJsonFileCreator {
      */
     public static List<String> getFieldNames(Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
-        List<String> fieldNames = new ArrayList<>();
+        List<String> fieldNames = new ArrayList<>(10);
         for (Field field : fields) {
             fieldNames.add(field.getName());
         }
