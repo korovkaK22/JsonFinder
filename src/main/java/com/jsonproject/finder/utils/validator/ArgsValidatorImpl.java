@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ArgsValidatorImpl implements ArgsValidator{
 
-    List<String> fieldNames = new ArrayList<>(10);
+    List<String> fieldNames = new ArrayList<>();
 
     {
         Field[] fields = TaxiDriver.class.getDeclaredFields();
