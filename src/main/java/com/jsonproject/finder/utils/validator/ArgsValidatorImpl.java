@@ -1,4 +1,4 @@
-package com.jsonproject.finder.validator;
+package com.jsonproject.finder.utils.validator;
 
 import com.jsonproject.finder.entity.TaxiDriver;
 
@@ -33,7 +33,7 @@ public class ArgsValidatorImpl implements ArgsValidator{
         validateParameter(args[1]);
     }
 
-    public void validateParameter(String parameter)  throws IllegalArgumentException {
+     public void validateParameter(String parameter)  throws IllegalArgumentException {
 
         if (!fieldNames.contains(parameter.toLowerCase())) {
             throw new IllegalArgumentException("Can't find such parameter: " + parameter);
@@ -41,7 +41,7 @@ public class ArgsValidatorImpl implements ArgsValidator{
     }
 
 
-    public void validatePath(File dir){
+    public void validatePath(File dir) throws IllegalArgumentException{
         if (!dir.exists()) {
             throw new IllegalArgumentException("Can't find such directory: " + dir);
         }
