@@ -1,6 +1,7 @@
 package com.jsonproject.finder.validator;
 
 import com.jsonproject.finder.entity.TaxiDriver;
+import com.jsonproject.finder.utils.validator.ArgsValidatorImpl;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
