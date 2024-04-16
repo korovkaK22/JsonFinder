@@ -3,19 +3,14 @@ package com.jsonproject.finder.validator;
 import com.jsonproject.finder.entity.TaxiDriver;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.function.Supplier;
+
 
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +22,7 @@ class ArgsValidatorImplTest {
     private ArgsValidatorImpl validator;
     @Mock
     private File mockFile;
-    private static final List<String> fields  = new ArrayList<>(10);;
+    private static final List<String> fields  = new ArrayList<>(10);
 
 
     @BeforeAll
@@ -67,9 +62,10 @@ class ArgsValidatorImplTest {
         @BeforeEach
         void setup(){
             validator = new ArgsValidatorImpl() {
+                private final ArgsValidatorImpl e = new ArgsValidatorImpl();
                 @Override
-                public File getFile(String path) {
-                    return mockFile;
+                public void validatePath(File dir){
+                    e.validatePath(mockFile);
                 }
             };
         }
