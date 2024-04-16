@@ -43,12 +43,12 @@ public class TaxiDriverJsonFileCreator {
 
             for (int i = 0; i < entityAmount; i++) {
                 TaxiDriver driver = creator.getTaxiDriver();
-                //Add mistake factor
+
                 if (hasMistakes && random.nextBoolean()) {
-                    String dutyParameterName = fieldNames.get(random.nextInt(1, fieldNames.size()));
-                    driver.setName(String.format("Invalid record without %s" , dutyParameterName));
+                    String dutyParameterName = fieldNames.get(random.nextInt(0, fieldNames.size()));
                     ObjectNode driverNode = mapper.valueToTree(driver);
                     driverNode.remove(dutyParameterName);
+                    driverNode.put("invalid record", String.format("Invalid record without %s" , dutyParameterName));
                     mapper.writeTree(jsonGenerator, driverNode);
                 } else {
                     mapper.writeValue(jsonGenerator, driver);
