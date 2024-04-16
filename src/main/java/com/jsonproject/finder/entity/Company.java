@@ -1,8 +1,6 @@
-package com.jsonproject.finder.entities;
+package com.jsonproject.finder.entity;
 
 import lombok.*;
-
-import java.util.List;
 
 @AllArgsConstructor
 @Getter
