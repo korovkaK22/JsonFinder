@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.jsonproject.finder.statistic.Statistic;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -12,14 +12,18 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class JsonReader {
-    private static final Logger logger = LogManager.getLogger(JsonReader.class);
+public class StatisticJsonAdder {
+    private static final Logger logger = LogManager.getLogger(StatisticJsonAdder.class);
     private final Statistic statistic;
     private final String fieldName;
-    int failedObjectCount = 0;
-    int allObject = 0;
+    @Getter
+    /* Amount of all objects processed, including invalid */
+    int failedObjectLastFileProcessed = 0;
+    @Getter
+    /* Amount of invalid appeared objects */
+    int totalObjectLastFileProcessed = 0;
 
-    public JsonReader(Statistic statistic, String fieldName) {
+    public StatisticJsonAdder(Statistic statistic, String fieldName) {
         this.statistic = statistic;
         this.fieldName = fieldName;
     }
@@ -28,7 +32,7 @@ public class JsonReader {
         try (JsonParser parser = createParser(file)) {
             processObjects(parser);
         }
-        logResults(failedObjectCount, allObject, file);
+        logResults(failedObjectLastFileProcessed, totalObjectLastFileProcessed, file);
     }
 
     private JsonParser createParser(File file) throws IOException {
@@ -37,15 +41,18 @@ public class JsonReader {
     }
 
     private void processObjects(JsonParser parser) throws IOException {
-        failedObjectCount = 0;
-        allObject = 0;
+        failedObjectLastFileProcessed = 0;
+        totalObjectLastFileProcessed = 0;
 
+        //todo написать, що якщо не масив початок, то екзепшн кине
         if (parser.nextToken() == JsonToken.START_ARRAY) {
             while (parser.nextToken() == JsonToken.START_OBJECT) {
-                allObject++;
+                totalObjectLastFileProcessed++;
+
                 if (!processObject(parser)) {
-                    failedObjectCount++;
+                    failedObjectLastFileProcessed++;
                 }
+
             }
         }
     }
