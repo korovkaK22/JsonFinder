@@ -4,8 +4,7 @@ import com.jsonproject.finder.statistic.Statistic;
 import com.jsonproject.finder.statistic.StatisticFactory;
 import com.jsonproject.finder.threads.ThreadStatsCounter;
 import com.jsonproject.finder.utils.DirectoryReader;
-import com.jsonproject.finder.utils.validator.ArgsValidator;
-import com.jsonproject.finder.utils.validator.ArgsValidatorImpl;
+import com.jsonproject.finder.utils.ArgsValidator;
 import com.jsonproject.finder.xml.XmlStatistic;
 import com.jsonproject.finder.xml.XmlWriter;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +24,7 @@ public class JsonFinder {
     public static void main(String[] args) {
 
         try {
-            ArgsValidator argsValidator = new ArgsValidatorImpl();
+            ArgsValidator argsValidator = new ArgsValidator();
             argsValidator.validate(args);
         } catch (Exception e) {
             logger.fatal("Program has started with illegal arguments, aborting", e);

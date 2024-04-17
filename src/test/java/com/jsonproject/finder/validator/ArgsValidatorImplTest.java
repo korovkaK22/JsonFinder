@@ -1,7 +1,7 @@
 package com.jsonproject.finder.validator;
 
 import com.jsonproject.finder.entity.TaxiDriver;
-import com.jsonproject.finder.utils.validator.ArgsValidatorImpl;
+import com.jsonproject.finder.utils.ArgsValidator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class ArgsValidatorImplTest {
 
-    private ArgsValidatorImpl validator;
+    private ArgsValidator validator;
     @Mock
     private File mockFile;
     private static final List<String> fields  = new ArrayList<>(10);
@@ -38,7 +38,7 @@ class ArgsValidatorImplTest {
 
     @BeforeEach
     void setup() {
-        validator = new ArgsValidatorImpl();
+        validator = new ArgsValidator();
     }
 
     @Nested
@@ -62,8 +62,8 @@ class ArgsValidatorImplTest {
 
         @BeforeEach
         void setup(){
-            validator = new ArgsValidatorImpl() {
-                private final ArgsValidatorImpl e = new ArgsValidatorImpl();
+            validator = new ArgsValidator() {
+                private final ArgsValidator e = new ArgsValidator();
                 @Override
                 public void validatePath(File dir){
                     e.validatePath(mockFile);

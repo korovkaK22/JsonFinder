@@ -1,4 +1,4 @@
-package com.jsonproject.finder.utils.validator;
+package com.jsonproject.finder.utils;
 
 import com.jsonproject.finder.entity.TaxiDriver;
 
@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArgsValidatorImpl implements ArgsValidator{
+public class ArgsValidator{
 
     List<String> fieldNames = new ArrayList<>();
 
@@ -19,7 +19,7 @@ public class ArgsValidatorImpl implements ArgsValidator{
     }
 
 
-    @Override
+
     public void validate(String[] args) throws IllegalArgumentException {
         if (args.length <2){
             throw new IllegalArgumentException(String.format("Total args is less than 2 (%d)",args.length));
