@@ -15,19 +15,23 @@ public class XmlWriter {
     Marshaller marshaller;
 
     public XmlWriter(XmlStatistic xmlStatistic) throws JAXBException {
+        if (xmlStatistic == null) {
+            throw new NullPointerException("Statistic can't be null");
+        }
+
         this.xmlStatistic = xmlStatistic;
         JAXBContext context = JAXBContext.newInstance(XmlStatistic.class);
         marshaller = context.createMarshaller();
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
     }
 
-     public boolean writeXmlStatsToXml(File file) {
-        try {
-            marshaller.marshal(xmlStatistic, file);
-            return true;
-        } catch (JAXBException e){
-            logger.error(String.format("Can't write xml statistic into %s file", file.getName()),e);
+    public boolean writeXmlStatsToXml(File file) throws JAXBException {
+        if (file == null) {
+            throw new NullPointerException("Can't write statistic to null file");
         }
-        return false;
+
+        marshaller.marshal(xmlStatistic, file);
+        return true;
+
     }
 }
