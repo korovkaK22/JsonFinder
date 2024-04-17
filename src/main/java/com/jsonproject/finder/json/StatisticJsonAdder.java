@@ -33,7 +33,7 @@ public class StatisticJsonAdder {
         try (JsonParser parser = createParser(file)) {
             processObjects(parser);
         } catch (IllegalArgumentException e) {
-            throw new IllegalJsonStructureException(String.format("File %s has invalid structure: %s", file.getName(), e), e);
+            throw new IllegalJsonStructureException(String.format("File %s has invalid array structure", file.getName()), e);
         }
         logResults(failedObjectLastFileProcessed, totalObjectLastFileProcessed, file);
     }

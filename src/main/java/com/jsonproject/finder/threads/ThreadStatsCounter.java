@@ -62,7 +62,7 @@ public class ThreadStatsCounter {
                 try {
                     adder.addFieldValuesIntoStats(file);
                 } catch (Exception e) {
-                    logger.warn(String.format("Exception in stats making with file %s: %s", file.getName(), e.getMessage()), e);
+                    logger.warn(String.format("Exception in stats making with file %s", file.getName()), e);
                     jsonParsingStats.addInvalidFiles();
                 }
                 jsonParsingStats.addTotalObjectsProcessed(adder.getTotalObjectLastFileProcessed());

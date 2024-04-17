@@ -6,7 +6,7 @@ public class JsonFileCreatingBlanks {
 
     public static void createLongFile(Random random, String path, boolean isCorrupted){
         TaxiDriverCreator taxiCreator = new TaxiDriverCreator(random);
-        TaxiDriverJsonFileCreator filesCreator = new TaxiDriverJsonFileCreator(3000000, taxiCreator, isCorrupted, random);
+        TaxiDriverJsonFileCreator filesCreator = new TaxiDriverJsonFileCreator(30000, taxiCreator, isCorrupted, random);
         filesCreator.generateFile(path);
     }
 
