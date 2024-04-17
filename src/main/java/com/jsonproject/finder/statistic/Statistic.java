@@ -8,7 +8,8 @@ import java.util.concurrent.ConcurrentMap;
 
 
 public class Statistic {
-    Map<String, Integer> stats = new ConcurrentHashMap<>();
+    @Getter
+    protected final Map<String, Integer> stats = new ConcurrentHashMap<>();
 
     public void addValue(String value){
         stats.put(value, stats.getOrDefault(value, 0) + 1);
