@@ -6,17 +6,16 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class ThreadStatsCounter {
     private static final Logger logger = LogManager.getLogger(ThreadStatsCounter.class);
     private final List<File> files;
     private final int numberOfThreads;
+    private JsonFileStats jsonParsingStats;
 
 
     public ThreadStatsCounter(List<File> files, int numberOfThreads) {
@@ -25,48 +24,55 @@ public class ThreadStatsCounter {
     }
 
     public void makeStatistic(Statistic statistic, String fieldName) {
-        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
-        Queue<File> fileQueue = new ConcurrentLinkedQueue<>(files);
-        CountDownLatch latch = new CountDownLatch(files.size());
-
-        JsonProcessingStats jsonParcingStats = new JsonProcessingStats();
-
-
-
-        for (int i = 0; i < numberOfThreads; i++) {
-            executor.submit(() -> {
-                StatisticJsonAdder adder = new StatisticJsonAdder(statistic, fieldName);
-                File currentFile;
-                while ((currentFile = fileQueue.poll()) != null) {
-                    jsonParcingStats.addAllFilesProcessed();
-                    try {
-                        try {
-                            adder.addFieldValuesIntoStats(currentFile);
-                        } catch (IOException e) {
-                            logger.warn(String.format("File %s is corrupted, aborting it", currentFile.getName()), e);
-                            jsonParcingStats.addInvalidFiles();
-                        }
-                        jsonParcingStats.addTotalObjectsProcessed(adder.getTotalObjectLastFileProcessed());
-                        jsonParcingStats.addObjectsWithMistake(adder.getFailedObjectLastFileProcessed());
-                        latch.countDown();
-                    } catch (Exception e) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            });
+        if (files.size() ==0){
+            logger.warn("There is no single file for parsing. Aborting");
+            return;
         }
+
+
+        ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
+
+        jsonParsingStats = new JsonFileStats();
+
+        List<Callable<Void>> tasks = getTasks(statistic, fieldName);
 
         try {
-            latch.await();
-            logger.info(jsonParcingStats.getStatisticString());
+            List<Future<Void>> futures = executor.invokeAll(tasks);
+            for (Future<Void> future : futures) {
+                future.get();
+            }
         } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            logger.error("Thread was interrupted while json parsing:", e);
+        } catch (Exception e) {
+            logger.error("Error while executor works", e);
+        } finally {
+            executor.shutdown();
+            logger.info(jsonParsingStats.getStatisticString());
         }
 
-        executor.shutdownNow();
     }
 
+    private List<Callable<Void>> getTasks(Statistic statistic, String fieldName) {
+        List<Callable<Void>> tasks = new ArrayList<>();
+        for (File file : files) {
+            tasks.add(() -> {
+                StatisticJsonAdder adder = new StatisticJsonAdder(statistic, fieldName);
+                jsonParsingStats.addAllFilesProcessed();
 
+                try {
+                    adder.addFieldValuesIntoStats(file);
+                } catch (Exception e) {
+                    logger.warn(String.format("Exception in stats making with file %s: %s", file.getName(), e.getMessage()), e);
+                    jsonParsingStats.addInvalidFiles();
+                }
+                jsonParsingStats.addTotalObjectsProcessed(adder.getTotalObjectLastFileProcessed());
+                jsonParsingStats.addObjectsWithMistake(adder.getFailedObjectLastFileProcessed());
+
+                return null;
+            });
+        }
+        return tasks;
+    }
 
 
 }

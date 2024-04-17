@@ -3,6 +3,7 @@ package com.jsonproject.finder.json;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
+import com.jsonproject.finder.exceptions.IllegalJsonStructureException;
 import com.jsonproject.finder.statistic.Statistic;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
@@ -28,9 +29,11 @@ public class StatisticJsonAdder {
         this.fieldName = fieldName;
     }
 
-    public void addFieldValuesIntoStats(File file) throws IOException {
+    public void addFieldValuesIntoStats(File file) throws IllegalJsonStructureException, IOException {
         try (JsonParser parser = createParser(file)) {
             processObjects(parser);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalJsonStructureException(String.format("File %s has invalid structure: %s", file.getName(), e), e);
         }
         logResults(failedObjectLastFileProcessed, totalObjectLastFileProcessed, file);
     }
@@ -44,7 +47,6 @@ public class StatisticJsonAdder {
         failedObjectLastFileProcessed = 0;
         totalObjectLastFileProcessed = 0;
 
-        //todo написать, що якщо не масив початок, то екзепшн кине
         if (parser.nextToken() == JsonToken.START_ARRAY) {
             while (parser.nextToken() == JsonToken.START_OBJECT) {
                 totalObjectLastFileProcessed++;
@@ -54,6 +56,8 @@ public class StatisticJsonAdder {
                 }
 
             }
+        } else {
+            throw new IllegalArgumentException("File didn't start with array.");
         }
     }
 

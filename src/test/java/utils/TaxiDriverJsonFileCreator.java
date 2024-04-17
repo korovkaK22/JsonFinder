@@ -26,7 +26,8 @@ public class TaxiDriverJsonFileCreator {
     private final int entityAmount;
     private final TaxiDriverCreator creator;
     private final boolean hasMistakes;
-    private final Random random = new Random(22);
+    private final Random random;
+
 
 
     public void generateFile(String path) {

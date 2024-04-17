@@ -2,7 +2,7 @@ package com.jsonproject.finder.threads;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class JsonProcessingStats {
+public class JsonFileStats {
    private final AtomicInteger totalObjectsProcessed = new AtomicInteger(0);
    private final AtomicInteger objectsWithMistake = new AtomicInteger(0);
    private final AtomicInteger invalidFiles = new AtomicInteger(0);
@@ -48,11 +48,13 @@ public class JsonProcessingStats {
 
 
    public String getStatisticString() {
-      StringBuilder sb = new StringBuilder(String.format("Processed all %d files", allFilesProcessed.get()));
+
+
+      StringBuilder sb = new StringBuilder(String.format("Added to statistic all %d files", allFilesProcessed.get() - invalidFiles.get()));
       if (invalidFiles.get() !=0 ){
          sb.append(String.format(", %d files were corrupted", invalidFiles.get()));
       }
-      sb.append(String.format(", total processed %d objects", totalObjectsProcessed.get()));
+      sb.append(String.format(", total processed %d objects", totalObjectsProcessed.get() - objectsWithMistake.get()));
       if (objectsWithMistake.get() !=0 ){
          sb.append(String.format(", %d weren't have exact parameter", objectsWithMistake.get()));
       }
