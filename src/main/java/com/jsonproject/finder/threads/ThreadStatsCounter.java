@@ -23,8 +23,8 @@ public class ThreadStatsCounter {
         this.numberOfThreads = numberOfThreads;
     }
 
-    public void makeStatistic(Statistic statistic, String fieldName) {
-        if (files.size() ==0){
+    public void initStatisticFromFiles(Statistic statistic, String fieldName) {
+        if (files.size() == 0) {
             logger.warn("There is no single file for parsing. Aborting");
             return;
         }
@@ -45,10 +45,10 @@ public class ThreadStatsCounter {
             logger.error("Thread was interrupted while json parsing:", e);
         } catch (Exception e) {
             logger.error("Error while executor works", e);
-        } finally {
-            executor.shutdown();
-            logger.info(jsonParsingStats.getStatisticString());
         }
+        executor.shutdown();
+        logger.info(jsonParsingStats.getStatisticString());
+
 
     }
 

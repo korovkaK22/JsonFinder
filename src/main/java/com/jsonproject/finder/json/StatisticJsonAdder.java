@@ -18,10 +18,10 @@ public class StatisticJsonAdder {
     private final Statistic statistic;
     private final String fieldName;
     @Getter
-    /* Amount of all objects processed, including invalid */
+    /* Amount of all objects processed, including invalid, resets with a new file processing */
     int failedObjectLastFileProcessed = 0;
     @Getter
-    /* Amount of invalid appeared objects */
+    /* Amount of only invalid appeared objects, resets with a new file processing */
     int totalObjectLastFileProcessed = 0;
 
     public StatisticJsonAdder(Statistic statistic, String fieldName) {

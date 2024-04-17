@@ -11,7 +11,7 @@ import com.jsonproject.finder.xml.XmlWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.xml.bind.JAXBException;
+
 import java.io.File;
 import java.util.List;
 import java.util.Locale;
@@ -35,10 +35,9 @@ public class JsonFinder {
 
         List<File> files = DirectoryReader.getAllFiles(new File(args[0]));
 
-
         Statistic stats = new StatisticFactory().getStatistic(args[1]);
         ThreadStatsCounter counter = new ThreadStatsCounter(files, THREAD_AMOUNT);
-        counter.makeStatistic(stats, args[1]);
+        counter.initStatisticFromFiles(stats, args[1]);
 
         XmlStatistic xmlStatistic = new XmlStatistic(stats);
 
@@ -46,9 +45,13 @@ public class JsonFinder {
             XmlWriter writer = new XmlWriter(xmlStatistic);
             File result = new File(
                     XML_STATS_PATH + String.format("/statistic_by_%s.xml", args[1].toLowerCase(Locale.ROOT)));
-            writer.writeXmlStatsToXml(result);
-            logger.info(String.format("File \"%s\" was successfully created.", result.getName()));
-        } catch (JAXBException e) {
+            boolean writingResult = writer.writeXmlStatsToXml(result);
+            if (writingResult) {
+                logger.info(String.format("File \"%s\" was successfully created.", result.getName()));
+            } else {
+                logger.info(String.format("File \"%s\" wasn't successfully created. Check logs for more info", result.getName()));
+            }
+        } catch (Exception e) {
             logger.fatal("Can't make xml file", e);
         }
 
