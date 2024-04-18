@@ -1,4 +1,4 @@
-package utils;
+package utils.jsoncreation;
 
 import com.fasterxml.jackson.core.JsonEncoding;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -7,7 +7,6 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.javafaker.Faker;
 import com.jsonproject.finder.entity.TaxiDriver;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -17,43 +16,35 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Supplier;
 
-@AllArgsConstructor
+
 public class TaxiDriverJsonFileCreator {
     private final Logger logger = LogManager.getLogger();
-    private final int entityAmount;
-    private final TaxiDriverCreator creator;
-    private final boolean hasMistakes;
-    private final Random random;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final JsonFactory jsonFactory = new JsonFactory();
+
+    {
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
+    public TaxiDriverJsonFileCreator() {
+
+    }
 
 
-
-    public void generateFile(String path) {
-        ObjectMapper mapper = new ObjectMapper();
-        JsonFactory jsonFactory = new JsonFactory();
+    public void generateFile(String path, List<TaxiDriver> drivers) {
         try (JsonGenerator jsonGenerator = jsonFactory.createGenerator(new File(path), JsonEncoding.UTF8)) {
 
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
-
             jsonGenerator.writeStartArray();
 
-            List<String> fieldNames = getFieldNames(TaxiDriver.class);
 
-            for (int i = 0; i < entityAmount; i++) {
-                TaxiDriver driver = creator.getTaxiDriver();
-
-                if (hasMistakes && random.nextBoolean()) {
-                    String dutyParameterName = fieldNames.get(random.nextInt(0, fieldNames.size()));
-                    ObjectNode driverNode = mapper.valueToTree(driver);
-                    driverNode.remove(dutyParameterName);
-                    driverNode.put("invalid record", String.format("Invalid record without %s" , dutyParameterName));
-                    mapper.writeTree(jsonGenerator, driverNode);
-                } else {
-                    mapper.writeValue(jsonGenerator, driver);
-                }
+            for (TaxiDriver driver : drivers) {
+                mapper.writeValue(jsonGenerator, driver);
             }
 
             jsonGenerator.writeEndArray();
@@ -63,8 +54,27 @@ public class TaxiDriverJsonFileCreator {
         }
     }
 
+    public void generateFile(String path, TaxiDriverCreator creator, int amount) {
+        try (JsonGenerator jsonGenerator = jsonFactory.createGenerator(new File(path), JsonEncoding.UTF8)) {
+
+            jsonGenerator.setPrettyPrinter(new DefaultPrettyPrinter());
+            jsonGenerator.writeStartArray();
+
+            for (int i = 0; i < amount; i++) {
+                TaxiDriver driver = creator.getTaxiDriver();
+                mapper.writeValue(jsonGenerator, driver);
+            }
+
+            jsonGenerator.writeEndArray();
+        } catch (IOException e) {
+            logger.error(String.format("Can't create file \"%s\"", path), e);
+        }
+    }
+
+
     /**
      * get all fields' names
+     *
      * @param clazz class which has fields
      * @return array with fields' names
      */

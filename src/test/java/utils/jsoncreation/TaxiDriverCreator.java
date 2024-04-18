@@ -1,4 +1,4 @@
-package utils;
+package utils.jsoncreation;
 
 import com.github.javafaker.Faker;
 import com.jsonproject.finder.entity.TaxiDriver;

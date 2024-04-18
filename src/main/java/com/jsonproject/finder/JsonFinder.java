@@ -7,6 +7,8 @@ import com.jsonproject.finder.utils.DirectoryReader;
 import com.jsonproject.finder.utils.ArgsValidator;
 import com.jsonproject.finder.xml.XmlStatistic;
 import com.jsonproject.finder.xml.XmlWriter;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,11 +28,16 @@ public class JsonFinder {
     /**
      * Number of threads that will be used in future parsing
      */
-    public static final int THREAD_AMOUNT = 8;
+    public static int THREAD_AMOUNT = 8;
     /**
      * Path, where statistic XML file will be saved.
      */
-    public static final String XML_STATS_PATH = "src/main/resources";
+    public static String XML_STATS_PATH = "src/main/resources";
+
+    /**
+     * File name, in which XML statistic will be saved then.
+     */
+    public static String STATISTIC_FILE_NAME = "statistic.xml";
 
 
     /**
@@ -68,7 +75,7 @@ public class JsonFinder {
         try {
             // Write XML data to file
             XmlWriter writer = new XmlWriter(xmlStatistic);
-            File result = new File(XML_STATS_PATH + String.format("/statistic_by_%s.xml", args[1].toLowerCase(Locale.ROOT)));
+            File result = new File( String.format("%s/%s",XML_STATS_PATH,  STATISTIC_FILE_NAME));
             boolean writingResult = writer.writeXmlStatsToXml(result);
 
             if (writingResult) {
@@ -79,5 +86,44 @@ public class JsonFinder {
         } catch (Exception e) {
             logger.fatal("Can't make xml file", e);
         }
+    }
+
+
+    /**
+     * Sets thread amount.
+     * @param threadAmount amount of thread that will be used for parsing
+     */
+    public static void setThreadAmount(int threadAmount) {
+        THREAD_AMOUNT = threadAmount;
+    }
+
+
+    /**
+     * Sets path for saving XML statistic file
+     * @param xmlStatsPath path, where statistic file will be saved
+     */
+    public static void setXmlStatsPath(String xmlStatsPath) {
+        XML_STATS_PATH = xmlStatsPath;
+    }
+
+    /**
+     * Sets file name for saving XML statistic
+     * @param statisticFileName file name
+     */
+    public static void setStatisticFileName(String statisticFileName) {
+        STATISTIC_FILE_NAME = statisticFileName;
+    }
+
+
+    public static int getThreadAmount() {
+        return THREAD_AMOUNT;
+    }
+
+    public static String getXmlStatsPath() {
+        return XML_STATS_PATH;
+    }
+
+    public static String getStatisticFileName() {
+        return STATISTIC_FILE_NAME;
     }
 }
