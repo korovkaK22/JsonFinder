@@ -1,6 +1,5 @@
 package com.jsonproject.finder.validator;
 
-import com.jsonproject.finder.entity.TaxiDriver;
 import com.jsonproject.finder.utils.ArgsValidator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,8 +8,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import utils.TaxiDriverUtil;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @ExtendWith(MockitoExtension.class)
-class ArgsValidatorImplTest {
+class ArgsValidatorTest {
 
     private ArgsValidator validator;
     @Mock
