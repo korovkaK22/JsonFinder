@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.jsonproject.finder.exceptions.IllegalJsonStructureException;
 import com.jsonproject.finder.statistic.Statistic;
-import com.jsonproject.finder.statistic.TextStatistic;
 import lombok.Getter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
