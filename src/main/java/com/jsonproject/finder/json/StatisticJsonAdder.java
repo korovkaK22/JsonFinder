@@ -1,6 +1,7 @@
 package com.jsonproject.finder.json;
 
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.jsonproject.finder.exceptions.IllegalJsonStructureException;
@@ -72,16 +73,15 @@ public class StatisticJsonAdder {
      *
      * @param file the JSON file to process.
      * @throws IllegalJsonStructureException if the JSON file does not start with an array or if the structure is otherwise invalid.
-     * @throws IOException if an I/O error occurs during file reading.
      */
-    public void addFieldValuesIntoStats(File file) throws IllegalJsonStructureException, IOException {
+    public void addFieldValuesIntoStats(File file) throws IllegalJsonStructureException {
         try (JsonParser parser = createParser(file)) {
             this.file = file;
             processObjects(parser);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | IOException e) {
             throw new IllegalJsonStructureException(String.format("File %s has invalid array structure", file.getName()), e);
         }
-       // logResults(failedObjectLastFileProcessed, totalObjectLastFileProcessed, file);
+        logResults(failedObjectLastFileProcessed, totalObjectLastFileProcessed, file);
     }
 
     /**
@@ -89,11 +89,15 @@ public class StatisticJsonAdder {
      *
      * @param file the file to create a parser for.
      * @return a {@link JsonParser} for reading the file.
-     * @throws IOException if an I/O error occurs while opening the file.
+     * @throws IllegalJsonStructureException if an I/O error occurs while opening the file.
      */
-    private JsonParser createParser(File file) throws IOException {
+    private JsonParser createParser(File file) throws IllegalJsonStructureException {
         JsonFactory factory = new JsonFactory();
-        return factory.createParser(file);
+        try {
+            return factory.createParser(file);
+        } catch (IOException | NullPointerException e) {
+            throw new IllegalJsonStructureException("Illegal file structure", e);
+        }
     }
 
     /**
