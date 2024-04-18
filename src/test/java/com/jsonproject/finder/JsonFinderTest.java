@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import utils.MapsCompare;
+import utils.TaxiDriverUtil;
 import utils.jsoncreation.JsonFileCreatingBlanks;
 import utils.jsoncreation.TaxiDriverCreator;
 import utils.xmlparsing.XmlStatsParser;
@@ -24,16 +26,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class JsonFinderTest {
 
-    private static final List<String> fields = new ArrayList<>();
-
-    @BeforeAll
-    static void setupAll() {
-        Field[] temp = TaxiDriver.class.getDeclaredFields();
-        for (Field field : temp) {
-            fields.add(field.getName());
-        }
-    }
-
+    private static final List<String> fields = TaxiDriverUtil.getTaxiDriverFields();
 
 
     @ParameterizedTest
@@ -55,7 +48,7 @@ class JsonFinderTest {
         Map<String, Integer> xmlStats = getXmlStatistic(xmlStatsPath);
         Map<String, Integer> realStats = getRealStatistic(drivers, parameter);
 
-        assertEquals(xmlStats, realStats);
+        assertTrue(MapsCompare.compare(xmlStats, realStats));
     }
 
 
@@ -72,7 +65,7 @@ class JsonFinderTest {
         Statistic realStats = StatisticChooser.getStatistic(parameter);
         drivers.forEach(driver -> {
             try {
-                realStats.addValue(getFieldValue(driver, parameter));
+                realStats.addValue(TaxiDriverUtil.getFieldValue(driver, parameter));
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 throw new RuntimeException("Failed to access field: " + parameter, e);
             }
@@ -80,12 +73,6 @@ class JsonFinderTest {
         return realStats.getStatistic();
     }
 
-    private String getFieldValue(TaxiDriver driver, String fieldName) throws IllegalAccessException, NoSuchFieldException {
-        Field field = TaxiDriver.class.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        Object value = field.get(driver);
-        return value != null ? value.toString() : "";
-    }
 
     private List<TaxiDriver> getDriversList(Random random, int amount){
         List<TaxiDriver> drivers = new ArrayList<>();
@@ -95,5 +82,6 @@ class JsonFinderTest {
         }
         return drivers;
     }
+
 
 }

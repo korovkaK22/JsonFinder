@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import utils.TaxiDriverUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -23,17 +24,7 @@ class ArgsValidatorImplTest {
     private ArgsValidator validator;
     @Mock
     private File mockFile;
-    private static final List<String> fields  = new ArrayList<>(10);
-
-
-    @BeforeAll
-        static void setupAll(){
-
-        Field[] temp = TaxiDriver.class.getDeclaredFields();
-        for (Field field : temp) {
-            fields.add(field.getName());
-        }
-    }
+    private static final List<String> fields = TaxiDriverUtil.getTaxiDriverFields();
 
 
     @BeforeEach
