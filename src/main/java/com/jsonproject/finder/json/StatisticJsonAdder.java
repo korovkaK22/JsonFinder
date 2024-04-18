@@ -13,24 +13,68 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 
-
+/**
+ * The StatisticJsonAdder class is designed for extracting specific fields from JSON files and adding them to a statistic repository.
+ * This class handles the reading of JSON files, identifies and extracts values associated with a specified field name, and processes
+ * these values using an implementation of the {@link Statistic} interface.
+ *
+ * @see Statistic
+ */
 public class StatisticJsonAdder {
+    /**
+     * Logger for this class, used to log information and warnings during the processing of JSON files.
+     */
     private static final Logger logger = LogManager.getLogger(StatisticJsonAdder.class);
-    private final Statistic statistic;
-    private final String fieldName;
-    File file;
-    @Getter
-    /* Amount of all objects processed, including invalid, resets with a new file processing */
-    int failedObjectLastFileProcessed = 0;
-    @Getter
-    /* Amount of only invalid appeared objects, resets with a new file processing */
-    int totalObjectLastFileProcessed = 0;
 
+    /**
+     * An instance of Statistic used to record values extracted from the JSON file.
+     */
+    private final Statistic statistic;
+
+    /**
+     * The name of the field to extract from JSON objects within the JSON file.
+     */
+    private final String fieldName;
+
+    /**
+     * The file currently being processed by this instance.
+     */
+    File file;
+
+
+    /**
+     * Counter for all objects processed during the last file processing, including invalid objects.
+     * This counter is reset with each new file processed.
+     */
+    @Getter
+    private int failedObjectLastFileProcessed = 0;
+
+    /**
+     * Counter for only the invalid objects encountered during the last file processing.
+     * This counter is reset with each new file processed.
+     */
+    @Getter
+    private int totalObjectLastFileProcessed = 0;
+
+    /**
+     * Constructs a new StatisticJsonAdder with the specified statistic handler and field name.
+     *
+     * @param statistic the statistic implementation to use for adding field values.
+     * @param fieldName the name of the field to look for in the JSON objects.
+     */
     public StatisticJsonAdder(Statistic statistic, String fieldName) {
         this.statistic = statistic;
         this.fieldName = fieldName;
     }
 
+    /**
+     * Processes a JSON file, extracting values associated with {@code fieldName} and adding them to the statistic.
+     * All JSON objects are expected to be in an array format at the root of the file.
+     *
+     * @param file the JSON file to process.
+     * @throws IllegalJsonStructureException if the JSON file does not start with an array or if the structure is otherwise invalid.
+     * @throws IOException if an I/O error occurs during file reading.
+     */
     public void addFieldValuesIntoStats(File file) throws IllegalJsonStructureException, IOException {
         try (JsonParser parser = createParser(file)) {
             this.file = file;
@@ -41,11 +85,24 @@ public class StatisticJsonAdder {
         logResults(failedObjectLastFileProcessed, totalObjectLastFileProcessed, file);
     }
 
+    /**
+     * Creates a JSON parser for the given file.
+     *
+     * @param file the file to create a parser for.
+     * @return a {@link JsonParser} for reading the file.
+     * @throws IOException if an I/O error occurs while opening the file.
+     */
     private JsonParser createParser(File file) throws IOException {
         JsonFactory factory = new JsonFactory();
         return factory.createParser(file);
     }
 
+    /**
+     * Processes all JSON objects in the JSON array, updating statistics based on the presence and validity of the specified field.
+     *
+     * @param parser the JSON parser to use for reading the JSON objects.
+     * @throws IOException if an error occurs while reading from the JSON file.
+     */
     private void processObjects(JsonParser parser) throws IOException {
         failedObjectLastFileProcessed = 0;
         totalObjectLastFileProcessed = 0;
@@ -64,6 +121,13 @@ public class StatisticJsonAdder {
         }
     }
 
+    /**
+     * Processes an individual JSON object, extracting and adding the value associated with {@code fieldName} to the statistic.
+     *
+     * @param parser the JSON parser to use for reading the object's fields.
+     * @return true if the specified field was found and processed without error, false otherwise.
+     * @throws IOException if an error occurs while reading from the JSON file.
+     */
     private boolean processObject(JsonParser parser) throws IOException {
         boolean foundField = false;
         while (parser.nextToken() != JsonToken.END_OBJECT) {
@@ -89,6 +153,13 @@ public class StatisticJsonAdder {
         return foundField;
     }
 
+    /**
+     * Logs the results of processing a file, including the number of successful and failed additions.
+     *
+     * @param failedObjectCount the number of objects that failed to process correctly.
+     * @param allObject the total number of objects processed.
+     * @param file the file that was processed.
+     */
     private void logResults(int failedObjectCount, int allObject, File file) {
         if (failedObjectCount == 0) {
             logger.info(String.format("Successfully added from %s %d objects", file.getName(), allObject));
