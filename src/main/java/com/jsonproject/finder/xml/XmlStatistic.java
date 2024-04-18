@@ -1,5 +1,6 @@
 package com.jsonproject.finder.xml;
 import com.jsonproject.finder.statistic.Statistic;
+import com.jsonproject.finder.statistic.TextStatistic;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,11 +15,12 @@ import java.util.*;
 public class XmlStatistic {
 
     @XmlElement(name = "item")
+    @Getter
     private final List<StatisticItem> items = new ArrayList<>();
 
 
     public XmlStatistic(Statistic statistic) {
-        Map<String, Integer> stats = statistic.getStats();
+        Map<String, Integer> stats = statistic.getStatistic();
         addAll(stats);
     }
 
@@ -26,6 +28,7 @@ public class XmlStatistic {
         stats.forEach((key, value) -> items.add(new StatisticItem(key, value)));
         sortItems();
     }
+
 
     public void sortItems(){
         Collections.sort(items);

@@ -79,7 +79,7 @@ public class JsonFinderTest {
             }
         }
 
-        JsonFinder.main(new String[]{folderPath, fields.get(0)});
+        JsonFinder.main(new String[]{folderPath, "drivingexperience"});
         //todo перевірку статистики
 
     }

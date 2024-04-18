@@ -2,6 +2,7 @@ package com.jsonproject.finder.threads;
 
 import com.jsonproject.finder.json.StatisticJsonAdder;
 import com.jsonproject.finder.statistic.Statistic;
+import com.jsonproject.finder.statistic.TextStatistic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

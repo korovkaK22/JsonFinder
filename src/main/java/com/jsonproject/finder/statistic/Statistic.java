@@ -1,19 +1,10 @@
 package com.jsonproject.finder.statistic;
 
-import lombok.Getter;
-
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
+public interface Statistic {
 
-public class Statistic {
-    @Getter
-    protected final Map<String, Integer> stats = new ConcurrentHashMap<>();
+    void addValue(String value);
 
-    public void addValue(String value){
-        stats.put(value, stats.getOrDefault(value, 0) + 1);
-    }
-
-
+    Map<String, Integer> getStatistic() throws IllegalArgumentException, NullPointerException;
 }
