@@ -19,6 +19,14 @@ In the current scope of this section, the focus is on the `TaxiDriver` entity, w
 The application facilitates the concurrent processing of large JSON datasets, enabling efficient 
 analysis and manipulation of the data related to taxi drivers.
 
+Comprehensive documentation has been also created for the entire codebase, which describes each field, method, and class. 
+This documentation details the functionality of each component and outlines the dependencies it utilizes.
+
+In keeping with the principle of `KISS` (_Keep It Simple, Stupid_), interfaces were not incorporated into this project. 
+This decision was made under the understanding that the project would be completed with its current scope and there are
+no plans for future expansion, thus a monolithic architecture was deemed suitable.
+
+
 _Below is an example of the JSON structure that the application can parse and analyze, specifically tailored 
 to demonstrate the data format for a taxi driver entity:_
 ```json
