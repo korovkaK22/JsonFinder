@@ -18,8 +18,6 @@ import utils.jsoncreation.JsonFileCreatingBlanks;
 import utils.jsoncreation.TaxiDriverCreator;
 import utils.xmlparsing.XmlStatsParser;
 
-import java.io.File;
-import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ThreadTest {
     private static final Logger logger = LogManager.getLogger(JsonFinder.class);
     private static final List<String> fields = TaxiDriverUtil.getTaxiDriverFields();
-    private static final int OBJECTS_IN_ONE_FILE = 40;
-    private static final int FILES_AMOUNT = 30;
+    private static final int OBJECTS_IN_ONE_FILE = 400;
+    private static final int FILES_AMOUNT = 40;
     private static final int THREAD_AMOUNT_FOR_CREATING_FILES = 10;
 
     @Disabled
