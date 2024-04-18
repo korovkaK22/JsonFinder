@@ -36,7 +36,7 @@ public class JsonFinder {
 
         Statistic stats = StatisticChooser.getStatistic(args[1]);
         ThreadStatsCounter counter = new ThreadStatsCounter(files, THREAD_AMOUNT);
-        counter.initStatisticFromFiles(stats, args[1]);
+        counter.addDataToStatisticFromFiles(stats, args[1]);
 
         XmlStatistic xmlStatistic = new XmlStatistic(stats);
 

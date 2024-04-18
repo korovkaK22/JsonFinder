@@ -34,26 +34,27 @@ public class XmlStatistic {
         Collections.sort(items);
     }
 
-}
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@Getter
-@Setter
-class StatisticItem implements Comparable<StatisticItem>{
-    private String value;
-    private Integer count;
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @Getter
+    @Setter
+   private static class StatisticItem implements Comparable<StatisticItem>{
+        private String value;
+        private Integer count;
 
-    public StatisticItem() { }
+        public StatisticItem() { }
 
-    public StatisticItem(String value, Integer count) {
-        this.value = value;
-        this.count = count;
+        public StatisticItem(String value, Integer count) {
+            this.value = value;
+            this.count = count;
+        }
+
+        @Override
+        public int compareTo(StatisticItem o) {
+            return o.count - this.count;
+        }
+
     }
 
-    @Override
-    public int compareTo(StatisticItem o) {
-        return o.count - this.count;
-    }
-
-
 }
+
